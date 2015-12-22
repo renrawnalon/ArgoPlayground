@@ -119,7 +119,8 @@ var invalidJson: AnyObject = [
 
 //: Decode json object nesting in array.
 
-var jsonString: String = "{\"id\":3, \"firstName\":\"Steve\", \"lastName\":\"Macintoch\", \"company\":\"Company\", \"friends\": null}"
+var jsonString: String =
+"{\"id\":3, \"firstName\":\"Steve\", \"lastName\":\"Macintoch\", \"company\":\"Company\", \"friends\": null}"
 
 let array = Array<AnyObject>(arrayLiteral: georgeJson, larryJson, tomJson)
 let json = ["users": array] as AnyObject
@@ -159,9 +160,8 @@ if let user: User = decode(tomJson) {
 
 //: Decode child object of jsonDictionary.
 
-let tomsFriends = tomJson["friends"] as! [AnyObject]
-
-if let user: User = decode(tomsFriends[0]) {
+if let tomsFriends = tomJson["friends"] as [AnyObject],
+   let user: User = decode(tomsFriends[0]) {
     user.userId
     user.firstName
     user.lastName
