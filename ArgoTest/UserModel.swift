@@ -25,7 +25,7 @@ struct User {
     let name: String
     let email: String?
     let companyName: String
-    let friends: [User]
+    let friends: [User]?
 }
 
 extension User: Decodable {
@@ -35,6 +35,6 @@ extension User: Decodable {
             <*> json <| "name"
             <*> json <|? "email" // Use ? for parsing optional values
             <*> json <| "company" // Parse nested objects
-            <*> json <|| "friends" // parse arrays of objects
+            <*> json <||? "friends" // parse arrays of objects
     }
 }

@@ -13,10 +13,31 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        jsonManipulationWithStrings()
+        jsonManipulationWithDicts()
+    }
+    
+    func jsonManipulationWithStrings() {
+        guard
+            let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding),
+            let json: AnyObject = try? NSJSONSerialization.JSONObjectWithData(data, options: []) else {
+                print("Invalid json string.")
+                return
+        }
+        
+        print("The Json:")
+        print(json)
+        
+        if let user: Decoded<User> = decode(json) {
+            print("****")
+            print(user)
+        }
+    }
+    
+    func jsonManipulationWithDicts() {
         let array = Array<AnyObject>(arrayLiteral: georgeJson, larryJson, tomJson)
         let json = ["users": array] as AnyObject
         if let userList: UserList = decode(json) {
-            print("success")
             print("****")
             for user in userList.users {
                 printUser(user)
@@ -59,9 +80,15 @@ class ViewController: UIViewController {
             print(email)
         }
         print(user.companyName)
-        print("Friend Count: \(user.friends.count)")
         
-        for friend in user.friends {
+        guard let friends = user.friends else {
+            print("Friend Count: 0")
+            return
+        }
+        
+        print("Friend Count: \(friends.count)")
+        
+        for friend in friends {
             print("    ----")
             print("    \(friend.userId)")
             print("    " + friend.name)
@@ -73,7 +100,7 @@ class ViewController: UIViewController {
     }
     
     var georgeJson: AnyObject {
-        let json = [
+        return [
             "id":1,
             "name":"George",
             "email":"email1@gmail.com",
@@ -94,12 +121,10 @@ class ViewController: UIViewController {
                 ]
             ]
         ]
-        
-        return json
     }
     
     var larryJson: AnyObject {
-        let json = [
+        return [
             "id":2,
             "name":"Larry",
             "email":"email2@gmail.com",
@@ -120,12 +145,10 @@ class ViewController: UIViewController {
                 ]*/
             ]
         ]
-        
-        return json
     }
     
     var tomJson: AnyObject {
-        let json = [
+        return [
             "id":3,
             "name":"Tom",
             "company":"Company",
@@ -146,12 +169,10 @@ class ViewController: UIViewController {
                 ]*/
             ]
         ]
-        
-        return json
     }
     
     var invalidJson: AnyObject {
-        let json = [
+        return [
             "id":3,
             "company":"Company",
             "friends": [
@@ -164,7 +185,9 @@ class ViewController: UIViewController {
                 ]
             ]
         ]
-        
-        return json
+    }
+    
+    var jsonString: String {
+        return " {\"id\":3, \"name\":\"Steve\", \"company\":\"Company\", \"friends\": null } "
     }
 }
