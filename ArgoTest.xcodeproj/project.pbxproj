@@ -104,6 +104,7 @@
 				5DCCCAA51C28D1540022BF85 /* Resources */,
 				02CF055AF7B187809AFA3A19 /* Embed Pods Frameworks */,
 				0A9ACF8B8131D5096CD4F3D4 /* Copy Pods Resources */,
+				5D56B4591C28DEE600F48462 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -189,6 +190,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ArgoTest/Pods-ArgoTest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		5D56B4591C28DEE600F48462 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if command -v swiftlint >/dev/null ; then\n    swiftlint\nelse\n    echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\n    echo \"or\"\n    echo \"Run `brew install swiftlint`\"\nfi";
 		};
 		FCAFB60102445721EF8FE698 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
