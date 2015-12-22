@@ -13,6 +13,7 @@
 		5DCCCAB01C28D1540022BF85 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DCCCAAE1C28D1540022BF85 /* Main.storyboard */; };
 		5DCCCAB21C28D1540022BF85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCCCAB11C28D1540022BF85 /* Assets.xcassets */; };
 		5DCCCAB51C28D1540022BF85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DCCCAB31C28D1540022BF85 /* LaunchScreen.storyboard */; };
+		5DCCCABD1C28D32A0022BF85 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCCCABC1C28D32A0022BF85 /* UserModel.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		5DCCCAB11C28D1540022BF85 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5DCCCAB41C28D1540022BF85 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5DCCCAB61C28D1540022BF85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5DCCCABC1C28D32A0022BF85 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		ADDF48E85103442744F55942 /* Pods_ArgoTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArgoTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEBE4EA4CF2D50FD83DA9284 /* Pods-ArgoTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArgoTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArgoTest/Pods-ArgoTest.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,6 +77,7 @@
 				5DCCCAB11C28D1540022BF85 /* Assets.xcassets */,
 				5DCCCAB31C28D1540022BF85 /* LaunchScreen.storyboard */,
 				5DCCCAB61C28D1540022BF85 /* Info.plist */,
+				5DCCCABC1C28D32A0022BF85 /* UserModel.swift */,
 			);
 			path = ArgoTest;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DCCCAAD1C28D1540022BF85 /* ViewController.swift in Sources */,
+				5DCCCABD1C28D32A0022BF85 /* UserModel.swift in Sources */,
 				5DCCCAAB1C28D1540022BF85 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
