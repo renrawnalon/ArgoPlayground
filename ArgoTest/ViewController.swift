@@ -35,6 +35,20 @@ class ViewController: UIViewController {
                 printUser(friend)
             }
         }
+        
+        let invalidUser: Decoded<User> = decode(invalidJson)
+        let invalidName = invalidUser.map({ (user) -> String in
+            return user.name
+        })
+        print("****")
+        print(invalidName)
+        
+        let validUser: Decoded<User> = decode(tomJson)
+        let validName = validUser.map({ (user) -> String in
+            return user.name
+        })
+        print("****")
+        print(validName)
     }
     
     func printUser(user: User) {
@@ -130,6 +144,24 @@ class ViewController: UIViewController {
                 "company":"Company",
                 "friends": []
                 ]*/
+            ]
+        ]
+        
+        return json
+    }
+    
+    var invalidJson: AnyObject {
+        let json = [
+            "id":3,
+            "company":"Company",
+            "friends": [
+                [
+                    "id":1,
+                    "name":"George",
+                    "email":"email1@gmail.com",
+                    "company":"Company",
+                    "friends": []
+                ]
             ]
         ]
         
