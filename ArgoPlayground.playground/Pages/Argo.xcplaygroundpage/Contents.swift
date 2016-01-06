@@ -181,3 +181,5 @@ let invalidUser: Decoded<User> = decode(invalidJson)
 invalidUser.map({ (user) -> String in
     return user.firstName + " " + user.lastName
 })
+
+//: [Next](@next)
