@@ -160,7 +160,7 @@ if let user: User = decode(tomJson) {
 
 //: Decode child object of jsonDictionary.
 
-if let tomsFriends = tomJson["friends"] as [AnyObject],
+if let tomsFriends = tomJson["friends"] as? [AnyObject],
    let user: User = decode(tomsFriends[0]) {
     user.userId
     user.firstName
