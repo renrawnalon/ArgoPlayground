@@ -7,6 +7,8 @@ target 'ArgoTest' do
 
 pod "Argo"
 pod "Curry"
+pod 'Moya'
+pod 'Moya/RxSwift'
 
 end
 
