@@ -1,14 +1,14 @@
 # ArgoPlayground
 
-A simple project that imports the json parsing library Argo and plays around with json decoding in an easy to manipulate playground format.
+A simple project that imports the json parsing library [Argo](https://github.com/thoughtbot/Argo) and plays around with json decoding in an easy to manipulate playground format.
 
-This project has now been split into two playground pages. The first page uses dummy json data to specifically test the various aspects of parsing with Argo. The second page, however, also imports RxSwift and Moya in order to test parsing json results from real apis. I chose the Github api to test because it is public, easy to use, and it provides json blobs along with its various well defined errors, which is something else I wanted to test. Using this, I would like to attempt to intellegently parse both the json returned in the success case, as well as the json returned in the failure case.
+This project has now been split into two playground pages. The first page uses dummy json data to specifically test the various aspects of parsing with Argo. The second page, however, also imports [RxSwift](https://github.com/ReactiveX/RxSwift) and [Moya](https://github.com/Moya/Moya) in order to test parsing json results from real apis. I chose the Github api to test because it is public, easy to use, and it provides json blobs along with its various well defined errors, which is something else I wanted to test. Using this, I would like to attempt to intellegently parse both the json returned in the success case, as well as the json returned in the failure case.
 
 Suggestions about how I could improve any of the code or thoughts on the concepts themselves are very welcome, so feel free to leave comments!
 
 ### Moya+Argo(+RxSwift)
 
-In the second page, I reimplement ivanbruel's `Moya-ObjectMapper` extension with Argo instead of ObjectMapper as the json parsing framework. Currently, I only have this solution implemented in this playground, but plan on turning it into a micro-framework like Moya-ObjectMapper so that other Argo users can easily use it as well.
+In the second page, I reimplement ivanbruel's [Moya-ObjectMapper](https://github.com/ivanbruel/Moya-ObjectMapper) extension with Argo instead of [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper) as the json parsing framework. Currently, I only have this solution implemented in this playground, but plan on turning it into a micro-framework like Moya-ObjectMapper so that other Argo users can easily use it as well.
 
 Using the map functions of this extension, it becomes possible to write clean Moya code with free json parsing like this:
 
@@ -30,7 +30,7 @@ Provider.sharedProvider
 
 ### A note on authenticating the Github api
 
-The code, as is, performs unauthenticated access to the Github api, which has an inherent request limit of 60 requests per hour. However, this limit can be increased to 5000 requests per hour by authenticating requests. This is easily done by providing an `access token` in the request header. Information on generating Github access tokens can be found [here](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), then authenticated requests can be performed by changing this:
+The code, as is, performs unauthenticated access to the [Github](https://developer.github.com/v3/) api, which has an inherent request limit of 60 requests per hour. However, this limit can be increased to 5000 requests per hour by authenticating requests. This is easily done by providing an `access token` in the request header. Information on generating Github access tokens can be found [here](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), then authenticated requests can be performed by changing this:
 
 ```
 private static let endpointClosure = { (target: GithubAPI) -> Endpoint<GithubAPI> in
@@ -60,7 +60,7 @@ Here is an example of how the access token header field declaration looks with a
 
 # Installation
 
-Run `pod install` with CocoaPods 0.36 or newer.
+Run `pod install` with [CocoaPods](https://cocoapods.org/) 0.36 or newer.
 
 Open ArgoTest.xcworkspace to edit playground with Cocoapods imports.
 
@@ -68,7 +68,7 @@ Run the blank project once to build the pods.
 
 ### Optional
 
-Install SwiftLint using Homebrew to enforce Swift style and conventions.
+Install [SwiftLint](https://github.com/realm/SwiftLint) using Homebrew to enforce Swift style and conventions.
 
 ```
 brew install swiftlint
