@@ -56,6 +56,75 @@ extension ErrorModel: Decodable {
     }
 }
 
+//: # Moya.Response+Argo and Observable+Argo code
+
+//: This code is *heavily* influenced by [ivanbruel's Moya-ObjectMapper](https://github.com/ivanbruel/Moya-ObjectMapper). Many thanks for giving me the building blocks to be able to apply to parse Moya responses with Argo.
+//: Similarly to how Moya-ObjectMapper was ported to a micro-framework, I think it would be useful to do the same with this solution for using Moya (or Moya+RxSwift or Moya+RAC) with Argo and would probably be appreciated by the community. I plan on doing this as my first contribution to OSS!!!
+
+//: I am declaring the generic type of the map functions as `mapDecodable<T: Decodable where T.DecodedType == T>` as opposed to `mapDecodable<T: Decodable>` based of [this Argo issue](https://github.com/thoughtbot/Argo/issues/98). Apparently, this is necessary because of the way Argo is implemented.
+
+//: Moya.Response+Argo
+extension Moya.Response {
+    func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> T {
+        guard let value: T = decode(try mapJSON()) else {
+            throw Error.JSONMapping(self)
+        }
+        return value
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> [T] {
+        guard let value: [T] = decode(try mapJSON()) else {
+            throw Error.JSONMapping(self)
+        }
+        return value
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<T> {
+        guard let decodable: Decoded<T> = decode(try mapJSON()) else {
+            throw Error.JSONMapping(self)
+        }
+        return decodable
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<[T]> {
+        guard let decodable: Decoded<[T]> = decode(try mapJSON()) else {
+            throw Error.JSONMapping(self)
+        }
+        return decodable
+    }
+}
+
+//: Observable+Argo
+extension ObservableType where E == Moya.Response {
+    func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<T> {
+        return flatMap { response -> Observable<T> in
+            let value: T = try response.mapDecodable()
+            return Observable.just(value)
+        }
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<[T]> {
+        return flatMap { response -> Observable<[T]> in
+            let value: [T] = try response.mapDecodable()
+            return Observable.just(value)
+        }
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<Decoded<T>> {
+        return flatMap { response -> Observable<Decoded<T>> in
+            let decodable: Decoded<T> = try response.mapDecodable()
+            return Observable.just(decodable)
+        }
+    }
+    
+    func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<Decoded<[T]>> {
+        return flatMap { response -> Observable<Decoded<[T]>> in
+            let decodable: Decoded<[T]> = try response.mapDecodable()
+            return Observable.just(decodable)
+        }
+    }
+}
+
 //: # Moya/RxSwift code
 
 //: More about using Moya with RxSwift can be found [here](https://github.com/Moya/Moya) and [here](https://github.com/Moya/Moya/blob/master/docs/RxSwift.md).
@@ -149,42 +218,63 @@ struct Provider {
     }
 }
 
-//: Make request whos response will be parsed with Argo.
-Provider.sharedProvider.request(.Info).subscribe { (event) in
-    print(event)
-    switch event {
-    case .Next(let response):
+//: # Various sample api calls with various methods of parsing.
+
+//: Parsing with Argo+RxSwift returning a model.
+Provider.sharedProvider
+    .request(.Info)
+    .mapDecodable()
+    .subscribe { (event: Event<InfoModel>) in
+        print(event)
+        switch event {
+        case .Next(let model):
+            print(model)
+        case .Error(let error):
+            print(error)
+        default:
+            break
+        }
+}
+
+//: Parsing with Argo+RxSwift returning a Decoded.
+Provider.sharedProvider
+    .request(.Info)
+    .mapDecodable()
+    .subscribe { (event: Event<Decoded<InfoModel>>) in
+        print(event)
+        switch event {
+        case .Next(let model):
+            print(model)
+        case .Error(let error):
+            print(error)
+        default:
+            break
+        }
+}
+
+//: Parsing with Argo only.
+Provider.sharedProvider.request(.Info) { (result) in
+    print(result)
+    switch result {
+    case .Success(let response):
+        print(response)
         do {
-            let jsonObject = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
-            if let infoModel: InfoModel = decode(jsonObject) {
+            // Cast to Decoded InfoModel.
+            if let decodedInfoModel: Decoded<InfoModel> = try response.mapDecodable() {
+                print(decodedInfoModel)
+            }
+            
+            // Cast to InfoModel.
+            // For some reason, both of these Model casts are necessary to give the compile enough context to do the mapping.
+            if let infoModel: InfoModel = try response.mapDecodable() as InfoModel {
                 print(infoModel)
             }
         } catch {
             print("Parsing Error")
         }
-    case .Error(let error):
+    case .Failure(let error):
         print(error)
-    default:
-        break
     }
 }
 
-Provider.sharedProvider.request(.Emojis).subscribe { (event) in
-    print(event)
-    switch event {
-    case .Next(let response):
-        do {
-            let jsonObject = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
-            if let emojisModel: EmojisModel = decode(jsonObject) {
-                print(emojisModel)
-            }
-        } catch {
-            print("Parsing Error")
-        }
-    case .Error(let error):
-        print(error)
-    default:
-        break
-    }
-}
 //: [Next](@next)
