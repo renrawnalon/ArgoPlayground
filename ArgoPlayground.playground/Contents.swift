@@ -42,29 +42,29 @@ extension Group: Decodable {
 //: Setup json objects to play around with.
 
 var georgeJson: AnyObject = [
-        "id":1,
-        "firstName":"George",
-        "lastName":"Washington",
-        "email":"email1@gmail.com",
-        "company":"Company",
-        "friends": [
-            [
-                "id":2,
-                "firstName":"Larry",
-                "lastName":"Walker",
-                "email":"email2@gmail.com",
-                "company":"Company",
-                "friends": []
-            ],
-            [
-                "id":3,
-                "firstName":"Tom",
-                "lastName":"Smith",
-                "company":"Company",
-                "friends": []
-            ]
+    "id":1,
+    "firstName":"George",
+    "lastName":"Washington",
+    "email":"email1@gmail.com",
+    "company":"Company",
+    "friends": [
+        [
+            "id":2,
+            "firstName":"Larry",
+            "lastName":"Walker",
+            "email":"email2@gmail.com",
+            "company":"Company",
+            "friends": []
+        ],
+        [
+            "id":3,
+            "firstName":"Tom",
+            "lastName":"Smith",
+            "company":"Company",
+            "friends": []
         ]
     ]
+]
 
 var larryJson: AnyObject = [
     "id":2,
