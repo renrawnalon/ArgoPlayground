@@ -7,6 +7,55 @@ import Argo
 import Curry
 import XCPlayground
 
+//: # Argo Code
+
+struct InfoModel {
+    let currentUserUrl: String
+    let emojisUrl: String
+    let eventsUrl: String
+    let feedsUrl: String
+}
+
+extension InfoModel: Decodable {
+    static func decode(json: JSON) -> Decoded<InfoModel> {
+        return curry(InfoModel.init)
+            <^> json <| "current_user_url"
+            <*> json <| "emojis_url"
+            <*> json <| "events_url"
+            <*> json <| "feeds_url"
+    }
+}
+
+struct EmojisModel {
+    let plusOne: String
+    let minusOne: String
+    let airplane: String
+    let zzz: String
+}
+
+extension EmojisModel: Decodable {
+    static func decode(json: JSON) -> Decoded<EmojisModel> {
+        return curry(EmojisModel.init)
+            <^> json <| "+1"
+            <*> json <| "-1"
+            <*> json <| "airplane"
+            <*> json <| "zzz"
+    }
+}
+
+struct ErrorModel {
+    let message: String
+    let documentationUrl: String
+}
+
+extension ErrorModel: Decodable {
+    static func decode(json: JSON) -> Decoded<ErrorModel> {
+        return curry(ErrorModel.init)
+            <^> json <| "message"
+            <*> json <| "documentation_url"
+    }
+}
+
 //: # Moya/RxSwift code
 
 //: More about using Moya with RxSwift can be found [here](https://github.com/Moya/Moya) and [here](https://github.com/Moya/Moya/blob/master/docs/RxSwift.md).
@@ -105,7 +154,14 @@ Provider.sharedProvider.request(.Info).subscribe { (event) in
     print(event)
     switch event {
     case .Next(let response):
-        print(String(data: response.data, encoding: NSUTF8StringEncoding))
+        do {
+            let jsonObject = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
+            if let infoModel: InfoModel = decode(jsonObject) {
+                print(infoModel)
+            }
+        } catch {
+            print("Parsing Error")
+        }
     case .Error(let error):
         print(error)
     default:
@@ -113,4 +169,22 @@ Provider.sharedProvider.request(.Info).subscribe { (event) in
     }
 }
 
+Provider.sharedProvider.request(.Emojis).subscribe { (event) in
+    print(event)
+    switch event {
+    case .Next(let response):
+        do {
+            let jsonObject = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
+            if let emojisModel: EmojisModel = decode(jsonObject) {
+                print(emojisModel)
+            }
+        } catch {
+            print("Parsing Error")
+        }
+    case .Error(let error):
+        print(error)
+    default:
+        break
+    }
+}
 //: [Next](@next)
