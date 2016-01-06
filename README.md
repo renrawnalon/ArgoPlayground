@@ -30,7 +30,7 @@ Provider.sharedProvider
 
 ### A note on authenticating the Github api
 
-The code, as is, performs unauthenticated access to the Github api, which has an inherent request limit of 60 requests per hour. However, this limit can be increased to 5000 requests per hour by authenticating requests. This is easilt done by providing an `access token` in the request header. Information on generating Github access tokens can be found [here](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), then authenticated requests can be performed by changing this:
+The code, as is, performs unauthenticated access to the Github api, which has an inherent request limit of 60 requests per hour. However, this limit can be increased to 5000 requests per hour by authenticating requests. This is easily done by providing an `access token` in the request header. Information on generating Github access tokens can be found [here](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), then authenticated requests can be performed by changing this:
 
 ```
 private static let endpointClosure = { (target: GithubAPI) -> Endpoint<GithubAPI> in
