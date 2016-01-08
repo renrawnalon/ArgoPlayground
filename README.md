@@ -28,6 +28,39 @@ Provider.sharedProvider
 }
 ```
 
+In this implementation, I provide functions that return either the raw value type T or the Decoded<T> type, leaving it to the user to decide how they wany their error information returned. In the case the T is the return type, the parsing error provided in `Decoded.Error(error)` is thrown and can be caught in either the `Error(error)` case of `Event<T>` from RxSwift's `Observable` or the `Failure(error)` case of `Response<T>` from Moya. This seems like the preferable solution, because it keeps all of the error logic in on place. The resulting code for making an api call would look something like this:
+
+```
+switch event { // (event: Event<InfoModel>)
+case .Next(let model):
+     print(model)
+case .Error(let error): // This catches both Moya errors and Argo parsing errors!!
+     print(error)
+default:
+     break
+}
+```
+
+The alternitave would cause Moya errors and Argo errors to be returned to two different places, which doesn't make sense. The resuling code for making an api call would look like this:
+
+```
+switch event { // (event: Event<Decoded<InfoModel>>) 
+case .Next(let decodedModel):
+    switch decodedModel {
+    case .Success(let model):
+        print(model)
+    case .Failure(let error): // This catches only Argo errors.
+        print(error)
+    }
+case .Error(let error): // This catches only Moya errors.
+    print(error)
+default:
+    break
+}
+```
+
+Arguably, the first approach is much more userful and managable. In this project, I have included both solutions for the sake of completeness, but when released as a framework, it would probably make sense to exclude the second approach all together, in order to avoid confusion and bad practive.
+
 ### A note on authenticating the Github api
 
 The code, as is, performs unauthenticated access to the [Github api](https://developer.github.com/v3/), which has an inherent request limit of 60 requests per hour. However, this limit can be increased to 5000 requests per hour by authenticating requests. This is easily done by providing an `access token` in the request header. Information on generating Github access tokens can be found [here](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), then authenticated requests can be performed by changing this:
