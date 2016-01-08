@@ -266,9 +266,9 @@ Provider.sharedProvider
 }
 
 //: Parsing with Argo only.
-Provider.sharedProvider.request(.Info) { (result) in
-    print(result)
-    switch result {
+Provider.sharedProvider.request(.Info) { (response) in
+    print(response)
+    switch response {
     case .Success(let response):
         print(response)
         do {
