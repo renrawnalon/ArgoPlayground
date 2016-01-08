@@ -61,10 +61,11 @@ extension ErrorModel: Decodable {
 //: This code is *heavily* influenced by [ivanbruel's Moya-ObjectMapper](https://github.com/ivanbruel/Moya-ObjectMapper). Many thanks for giving me the building blocks to be able to apply to parse Moya responses with Argo.
 //: Similarly to how Moya-ObjectMapper was ported to a micro-framework, I think it would be useful to do the same with this solution for using Moya (or Moya+RxSwift or Moya+RAC) with Argo and would probably be appreciated by the community. I plan on doing this as my first contribution to OSS!!!
 
-//: I am declaring the generic type of the map functions as `mapDecodable<T: Decodable where T.DecodedType == T>` as opposed to `mapDecodable<T: Decodable>` based of [this Argo issue](https://github.com/thoughtbot/Argo/issues/98). Apparently, this is necessary because of the way Argo is implemented.
+//: *Note:* I am declaring the generic type of the map functions as `mapDecodable<T: Decodable where T.DecodedType == T>` as opposed to `mapDecodable<T: Decodable>` based of [this Argo issue](https://github.com/thoughtbot/Argo/issues/98). Apparently, this is necessary because of the way Argo is implemented.
 
 //: Moya.Response+Argo
 extension Moya.Response {
+    // Decode Object throwing Argo parsing error on failure.
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> T {
         let decodable: Decoded<T> = decode(try mapJSON())
         switch decodable {
@@ -75,6 +76,7 @@ extension Moya.Response {
         }
     }
     
+    // Decode Array throwing Argo parsing error on failure.
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> [T] {
         let decodable: Decoded<[T]> = decode(try mapJSON())
         switch decodable {
@@ -85,10 +87,12 @@ extension Moya.Response {
         }
     }
     
+    // Decode Object returning Decoded object to retain failure info.
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<T> {
         return decode(try mapJSON()) as Decoded<T>
     }
     
+    // Decode Array returning Decoded object to retain failure info.
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<[T]> {
         return decode(try mapJSON()) as Decoded<[T]>
     }
@@ -96,6 +100,7 @@ extension Moya.Response {
 
 //: Observable+Argo
 extension ObservableType where E == Moya.Response {
+    // Decode Object returning an observable of raw value type.
     func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<T> {
         return flatMap { response -> Observable<T> in
             let value: T = try response.mapDecodable()
@@ -103,6 +108,7 @@ extension ObservableType where E == Moya.Response {
         }
     }
     
+    // Decode Array returning an observable of raw value type.
     func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<[T]> {
         return flatMap { response -> Observable<[T]> in
             let value: [T] = try response.mapDecodable()
@@ -110,6 +116,7 @@ extension ObservableType where E == Moya.Response {
         }
     }
     
+    // Decode Object returning an observable of decoded type with failure info.
     func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<Decoded<T>> {
         return flatMap { response -> Observable<Decoded<T>> in
             let decodable: Decoded<T> = try response.mapDecodable()
@@ -117,6 +124,7 @@ extension ObservableType where E == Moya.Response {
         }
     }
     
+    // Decode Array returning an observable of decoded type with failure info.
     func mapDecodable<T: Decodable where T.DecodedType == T>() -> Observable<Decoded<[T]>> {
         return flatMap { response -> Observable<Decoded<[T]>> in
             let decodable: Decoded<[T]> = try response.mapDecodable()
@@ -229,7 +237,7 @@ Provider.sharedProvider
         switch event {
         case .Next(let model):
             print(model)
-        case .Error(let error):
+        case .Error(let error): // This catches both Moya errors and Argo parsing errors!!
             print(error)
         default:
             break
@@ -243,9 +251,14 @@ Provider.sharedProvider
     .subscribe { (event: Event<Decoded<InfoModel>>) in
         print(event)
         switch event {
-        case .Next(let model):
-            print(model)
-        case .Error(let error):
+        case .Next(let decodedModel):
+            switch decodedModel {
+            case .Success(let model):
+                print(model)
+            case .Failure(let error): // This catches only Argo errors.
+                print(error)
+            }
+        case .Error(let error): // This catches only Moya errors.
             print(error)
         default:
             break
