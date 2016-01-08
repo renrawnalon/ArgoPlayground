@@ -270,7 +270,7 @@ Provider.sharedProvider.request(.Info) { (result) in
                 print(infoModel)
             }
         } catch {
-            print("Parsing Error")
+            print("Parsing Error: \(error)")
         }
     case .Failure(let error):
         print(error)
