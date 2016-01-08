@@ -66,17 +66,23 @@ extension ErrorModel: Decodable {
 //: Moya.Response+Argo
 extension Moya.Response {
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> T {
-        guard let value: T = decode(try mapJSON()) else {
-            throw Error.JSONMapping(self)
+        let decodable: Decoded<T> = decode(try mapJSON())
+        switch decodable {
+        case let .Success(value):
+            return value
+        case let .Failure(error):
+            throw error
         }
-        return value
     }
     
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> [T] {
-        guard let value: [T] = decode(try mapJSON()) else {
-            throw Error.JSONMapping(self)
+        let decodable: Decoded<[T]> = decode(try mapJSON())
+        switch decodable {
+        case let .Success(value):
+            return value
+        case let .Failure(error):
+            throw error
         }
-        return value
     }
     
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<T> {
