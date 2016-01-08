@@ -220,6 +220,12 @@ struct Provider {
             SharedProvider.instance = newSharedProvider
         }
     }
+}
+
+extension Provider {
+    static func request(target: GithubAPI) -> Observable<Moya.Response> {
+        return Provider.sharedProvider.request(target)
+    }
     
     static func request(target: GithubAPI, completion: Moya.Completion) -> Cancellable {
         return Provider.sharedProvider.request(target, completion: completion)
@@ -229,8 +235,7 @@ struct Provider {
 //: # Various sample api calls with various methods of parsing.
 
 //: Parsing with Argo+RxSwift returning a model.
-Provider.sharedProvider
-    .request(.Info)
+Provider.request(.Info)
     .mapDecodable()
     .subscribe { (event: Event<InfoModel>) in
         print(event)
@@ -245,8 +250,7 @@ Provider.sharedProvider
 }
 
 //: Parsing with Argo+RxSwift returning a Decoded.
-Provider.sharedProvider
-    .request(.Info)
+Provider.request(.Info)
     .mapDecodable()
     .subscribe { (event: Event<Decoded<InfoModel>>) in
         print(event)
@@ -266,7 +270,7 @@ Provider.sharedProvider
 }
 
 //: Parsing with Argo only.
-Provider.sharedProvider.request(.Info) { (response) in
+Provider.request(.Info) { (response) in
     print(response)
     switch response {
     case .Success(let response):

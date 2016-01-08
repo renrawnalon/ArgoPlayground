@@ -13,8 +13,7 @@ In the second page, I reimplement ivanbruel's [Moya-ObjectMapper](https://github
 Using the map functions of this extension, it becomes possible to write clean Moya code with free json parsing like this:
 
 ```
-Provider.sharedProvider
-    .request(.Info)
+Provider.request(.Info)
     .mapDecodable()
     .subscribe { (event: Event<InfoModel>) in
         switch event {
