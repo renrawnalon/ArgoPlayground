@@ -86,17 +86,11 @@ extension Moya.Response {
     }
     
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<T> {
-        guard let decodable: Decoded<T> = decode(try mapJSON()) else {
-            throw Error.JSONMapping(self)
-        }
-        return decodable
+        return decode(try mapJSON()) as Decoded<T>
     }
     
     func mapDecodable<T: Decodable where T.DecodedType == T>() throws -> Decoded<[T]> {
-        guard let decodable: Decoded<[T]> = decode(try mapJSON()) else {
-            throw Error.JSONMapping(self)
-        }
-        return decodable
+        return decode(try mapJSON()) as Decoded<[T]>
     }
 }
 
